@@ -6,5 +6,9 @@ package org.kuali.careers.elevator;
 public class ElevatorSimulator {
 	public static void main(String args[]) {
 		System.out.println("Welcome to the elevator simulator");
+
+		Controller controller = new Controller(2, 5);
+
+		controller.showElevatorState();
 	}
 }
