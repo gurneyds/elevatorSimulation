@@ -32,8 +32,7 @@ public class Elevator {
 
 		// Start the simulation thread
 		Thread simulationThread = new Thread(new MovementThread());
-		simulationThread.setDaemon(true);	// When the program ends just kill the thread
-		simulationThread.run();
+		simulationThread.start();
 	}
 
 	// Move the elevator to the destination floor
@@ -113,7 +112,7 @@ public class Elevator {
 				// Give some time before looking again
 				try {
 					System.out.println(name + " is waiting for a request...");
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch(InterruptedException e) {}
 			}
 		}

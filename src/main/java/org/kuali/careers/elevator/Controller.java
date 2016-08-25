@@ -28,14 +28,20 @@ public class Controller {
 
 	// This is the main api for a caller to request an elevator
 	public void request(int pickupFloor, int destinationFloor) {
-		// Find a suitable elevator to be used
-		Elevator elevator = findElevator(pickupFloor, destinationFloor);
-
-		if(elevator != null) {
-			// Dispatch the elevator
-			elevator.pickupPassenger(pickupFloor, destinationFloor);
+		if(pickupFloor < 1 || destinationFloor < 1) {
+			System.out.println("Underground floor is not available");
+		} else if(pickupFloor > numFloors || destinationFloor > numFloors) {
+			System.out.println("Not that many floors in the building!");
 		} else {
-			System.out.println("Sorry - no elevators are in service at this time, please use the stairs!");
+			// Find a suitable elevator to be used
+			Elevator elevator = findElevator(pickupFloor, destinationFloor);
+
+			if (elevator != null) {
+				// Dispatch the elevator
+				elevator.pickupPassenger(pickupFloor, destinationFloor);
+			} else {
+				System.out.println("Sorry - no elevators are in service at this time, please use the stairs!");
+			}
 		}
 	}
 
