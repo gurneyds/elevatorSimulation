@@ -7,7 +7,10 @@ import java.util.List;
  * Created by gurneyds on 8/25/16.
  */
 public class Controller {
-	private static final int FLOOR_TRAVEL_TIME = 10;
+	// Time is in Milliseconds
+	private static final int FLOOR_TRAVEL_TIME = 10000;
+	private static final int LOAD_TIME = 2000;
+
 	private static final int MAX_CYCLES = 100;
 
 	private List<Elevator> elevatorList = new ArrayList<>();
@@ -19,7 +22,7 @@ public class Controller {
 		this.numFloors = numFloors;
 
 		for(int i=0; i < numElevators; i++) {
-			elevatorList.add(new Elevator("Elevator" + i, FLOOR_TRAVEL_TIME, MAX_CYCLES));
+			elevatorList.add(new Elevator("Elevator" + i, FLOOR_TRAVEL_TIME, LOAD_TIME, MAX_CYCLES));
 		}
 	}
 
