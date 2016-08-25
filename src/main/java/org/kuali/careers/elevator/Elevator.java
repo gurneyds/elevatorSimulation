@@ -6,35 +6,43 @@ package org.kuali.careers.elevator;
 public class Elevator {
 	private String name;
 	private int floorTravelTime;
-	private int maxCycles;
+	private int maxTrips;
 
 	private ElevatorState state;
 	int onFloorNumber;
 	int numberOfTrips;
-	int cycles;
+	int numberOfFloors;
 
-	public Elevator(String name, int floorTravelTime, int maxCycles) {
+	public Elevator(String name, int floorTravelTime, int maxTrips) {
 		this.name = name;
 		this.floorTravelTime = floorTravelTime;
-		this.maxCycles = maxCycles;
+		this.maxTrips = maxTrips;
+		this.state = ElevatorState.STOPPED_ON_FLOOR;
+		this.onFloorNumber = 1;
 	}
 
 	// Move the elevator to the destination floor
-	public void pickupPassenger(int destinationFloor) {
+	public void pickupPassenger(int requestFloor, int destinationFloor) {
 		// TODO
 	}
 
 	public boolean isInService() {
-		return cycles >= maxCycles;
+		return numberOfTrips >= maxTrips;
+	}
+	public void performService() {
+		numberOfTrips = 0;
 	}
 
 	@Override
 	public String toString() {
 		return "Elevator{" +
 				"name='" + name + '\'' +
+				", floorTravelTime=" + floorTravelTime +
+				", maxTrips=" + maxTrips +
 				", state=" + state +
 				", onFloorNumber=" + onFloorNumber +
 				", numberOfTrips=" + numberOfTrips +
+				", numberOfFloors=" + numberOfFloors +
 				'}';
 	}
 }
