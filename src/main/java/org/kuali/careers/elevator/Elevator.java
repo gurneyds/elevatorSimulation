@@ -7,15 +7,19 @@ import java.util.List;
  * Created by gurneyds on 8/25/16.
  */
 public class Elevator {
+	private static final int DEFAULT_FLOOR_TRAVEL_TIME = 10000;	// Milliseconds
+	private static final int DEFAULT_MAX_TRIPS = 100;
+	private static final int DEFAULT_LOAD_TIME = 5000;	// Milliseconds
+
 	// Configuration data
 	private String name;
-	private int floorTravelTime;
-	private int loadTime;
-	private int maxTrips;
+	private int floorTravelTime = DEFAULT_FLOOR_TRAVEL_TIME;
+	private int loadTime = DEFAULT_LOAD_TIME;
+	private int maxTrips = DEFAULT_MAX_TRIPS;
 
 	// Runtime data
-	private ElevatorState state;
-	private int onFloorNumber;
+	private ElevatorState state = ElevatorState.STOPPED_ON_FLOOR;
+	private int onFloorNumber = 1;
 	private int numberOfTrips;
 	private int numberOfFloors;
 
@@ -27,13 +31,25 @@ public class Elevator {
 		this.floorTravelTime = floorTravelTime;
 		this.loadTime = loadTime;
 		this.maxTrips = maxTrips;
-		this.state = ElevatorState.STOPPED_ON_FLOOR;
 		this.onFloorNumber = 1;
 
 		// Start the simulation thread
 		Thread simulationThread = new Thread(new MovementThread());
 		simulationThread.start();
 	}
+
+	public Elevator(String name) {
+		this.name = name;
+
+		// Start the simulation thread
+		Thread simulationThread = new Thread(new MovementThread());
+		simulationThread.start();
+	}
+
+	public String getName() {
+		return name;
+	}
+
 
 	// Move the elevator to the destination floor
 	public void pickupPassenger(int requestFloor, int destinationFloor) {
@@ -47,6 +63,34 @@ public class Elevator {
 	}
 	public void performService() {
 		numberOfTrips = 0;
+	}
+
+	public ElevatorState getState() {
+		return state;
+	}
+	public void setElevatorState(ElevatorState state) {
+		this.state = state;
+	}
+
+	public int getCurrentFloor() {
+		return onFloorNumber;
+	}
+	public void setCurrentFloor(int onFloorNumber) {
+		this.onFloorNumber = onFloorNumber;
+	}
+
+	// This is the last request floor where the elevator will stop moving (end of a trip)
+	public int getLastRequestedFloor() {
+		int lastRequestedFloor = 1;
+		synchronized (travelList) {
+			if(travelList.size() > 0) {
+				lastRequestedFloor = travelList.get(travelList.size() - 1);
+			} else {
+				// Return the floor that the elevator is on right now
+				lastRequestedFloor = onFloorNumber;
+			}
+		}
+		return lastRequestedFloor;
 	}
 
 	@Override
@@ -81,7 +125,7 @@ public class Elevator {
 				synchronized (state) {
 					if (gotoFloor != null) {
 						// Close the doors - in a real system we would emit or publish an event
-						System.out.println("Doors closing");
+						System.out.println(name + " - doors closing");
 
 						// Determine if we are going up or down
 						state = gotoFloor > onFloorNumber ? ElevatorState.TRAVELING_UP : ElevatorState.TRAVELING_DOWN;
@@ -93,7 +137,7 @@ public class Elevator {
 						}
 
 						// Opening the doors
-						System.out.println("Doors opening");
+						System.out.println(name + " - doors opening");
 						state = ElevatorState.STOPPED_ON_FLOOR;
 
 						// We have arrived at the floor
