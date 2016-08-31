@@ -25,7 +25,9 @@ public class Controller {
 			this.numFloors = numFloors;
 
 			for (int i = 0; i < numElevators; i++) {
-				elevatorList.add(new Elevator("Elevator" + i, FLOOR_TRAVEL_TIME, LOAD_TIME, MAX_CYCLES));
+				Elevator elevator = new Elevator("Elevator" + i, FLOOR_TRAVEL_TIME, LOAD_TIME, MAX_CYCLES);
+				elevatorList.add(elevator);
+				elevator.putIntoService();
 			}
 		} else {
 			throw new RuntimeException("Invalid number of elevators or number of floors");
@@ -37,6 +39,9 @@ public class Controller {
 		if(elevatorList == null || (elevatorList != null && elevatorList.size() <= 0)) {
 			throw new ElevatorException("No elevators provided");
 		}
+
+		elevatorList.stream().forEach( e -> e.putIntoService());
+
 		this.elevatorList = elevatorList;
 		this.numFloors = numFloors;
 	}
@@ -122,7 +127,7 @@ public class Controller {
 			}
 		} else {
 			for(Elevator e : movingDownElevators) {
-				// Add 1 to the current floor because the eleator will need a little notice to decelerate
+				// Add 1 to the current floor because the elevator will need a little notice to decelerate
 				if(e.getCurrentFloor()+1 > pickupFloor) {
 					bestElevator = e;
 					break;

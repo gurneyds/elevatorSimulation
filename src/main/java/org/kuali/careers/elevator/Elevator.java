@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by gurneyds on 8/25/16.
  */
-public class Elevator {
+public class Elevator implements Runnable {
 	private static final int DEFAULT_FLOOR_TRAVEL_TIME = 10000;	// Milliseconds
 	private static final int DEFAULT_MAX_TRIPS = 100;
 	private static final int DEFAULT_LOAD_TIME = 5000;	// Milliseconds
@@ -32,17 +32,15 @@ public class Elevator {
 		this.loadTime = loadTime;
 		this.maxTrips = maxTrips;
 		this.onFloorNumber = 1;
-
-		// Start the simulation thread
-		Thread simulationThread = new Thread(new MovementThread());
-		simulationThread.start();
 	}
 
 	public Elevator(String name) {
 		this.name = name;
+	}
 
+	public void putIntoService() {
 		// Start the simulation thread
-		Thread simulationThread = new Thread(new MovementThread());
+		Thread simulationThread = new Thread(this);
 		simulationThread.start();
 	}
 
@@ -106,61 +104,59 @@ public class Elevator {
 				'}';
 	}
 
-	private class MovementThread implements Runnable {
-		@Override
-		public void run() {
-			while(true) {
-				// This is where we will be going
-				Integer gotoFloor = null;
+	@Override
+	public void run() {
+		while(true) {
+			// This is where we will be going
+			Integer gotoFloor = null;
 
-				// Watch the travelList and move the elevator between floors
-				synchronized (travelList) {
-					if(travelList.size() > 0) {
-						// Pull the first floor off the list and travel to it
-						gotoFloor = travelList.get(0);
-						travelList.remove(0);
-					}
+			// Watch the travelList and move the elevator between floors
+			synchronized (travelList) {
+				if(travelList.size() > 0) {
+					// Pull the first floor off the list and travel to it
+					gotoFloor = travelList.get(0);
+					travelList.remove(0);
 				}
-
-				synchronized (state) {
-					if (gotoFloor != null) {
-						// Close the doors - in a real system we would emit or publish an event
-						System.out.println(name + " - doors closing");
-
-						// Determine if we are going up or down
-						state = gotoFloor > onFloorNumber ? ElevatorState.TRAVELING_UP : ElevatorState.TRAVELING_DOWN;
-
-						System.out.println(name + " - traveling to floor #" + gotoFloor);
-						// Simulate the travel time
-						try {
-							Thread.sleep(floorTravelTime);
-						} catch (InterruptedException e) {
-						}
-
-						// Opening the doors
-						System.out.println(name + " - doors opening");
-						state = ElevatorState.STOPPED_ON_FLOOR;
-
-						// We have arrived at the floor
-						onFloorNumber = gotoFloor;
-
-						// Simulate the time it takes for passengers to get on and off
-						try {
-							Thread.sleep(loadTime);
-						} catch (InterruptedException e) {
-						}
-
-						// Ready for the next request now
-					} else {
-						System.out.println(name + " is waiting on floor#" + getCurrentFloor());
-					}
-				}
-
-				// Give some time before looking again
-				try {
-					Thread.sleep(1000);
-				} catch(InterruptedException e) {}
 			}
+
+			synchronized (state) {
+				if (gotoFloor != null) {
+					// Close the doors - in a real system we would emit or publish an event
+					System.out.println(name + " - doors closing");
+
+					// Determine if we are going up or down
+					state = gotoFloor > onFloorNumber ? ElevatorState.TRAVELING_UP : ElevatorState.TRAVELING_DOWN;
+
+					System.out.println(name + " - traveling to floor #" + gotoFloor);
+					// Simulate the travel time
+					try {
+						Thread.sleep(floorTravelTime);
+					} catch (InterruptedException e) {
+					}
+
+					// Opening the doors
+					System.out.println(name + " - doors opening");
+					state = ElevatorState.STOPPED_ON_FLOOR;
+
+					// We have arrived at the floor
+					onFloorNumber = gotoFloor;
+
+					// Simulate the time it takes for passengers to get on and off
+					try {
+						Thread.sleep(loadTime);
+					} catch (InterruptedException e) {
+					}
+
+					// Ready for the next request now
+				} else {
+					System.out.println(name + " is waiting on floor#" + getCurrentFloor());
+				}
+			}
+
+			// Give some time before looking again
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException e) {}
 		}
 	}
 }

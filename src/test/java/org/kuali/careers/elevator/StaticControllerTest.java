@@ -28,30 +28,16 @@ public class StaticControllerTest {
 		new Controller(-1, -1);
 	}
 
-	@Test
+	@Test(expected = InvalidFloorRequest.class)
 	public void invalidPickupFloor() {
 		Controller c = new Controller(1, 1);
-		try {
-			c.request(-1, 1);
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(true);
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		}
+		c.request(-1, 1);
 	}
 
-	@Test
+	@Test(expected = InvalidFloorRequest.class)
 	public void invalidDestinationFloor() {
 		Controller c = new Controller(1, 1);
-		try {
-			c.request(1, -1);
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(true);
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		}
+		c.request(1, -1);
 	}
 
 	@Test
@@ -60,15 +46,9 @@ public class StaticControllerTest {
 		Elevator e1 = new Elevator("Number1");	e1.setCurrentFloor(1);
 
 		elevatorList.add(new Elevator("Number1"));
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(1, 2);
-			assertTrue(elevatorName.equals("Number1"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(1, 2);
+		assertTrue(elevatorName.equals("Number1"));
 	}
 
 	@Test
@@ -77,15 +57,9 @@ public class StaticControllerTest {
 		Elevator e1 = new Elevator("Number1");	e1.setCurrentFloor(10);
 
 		elevatorList.add(new Elevator("Number1"));
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(1, 2);
-			assertTrue(elevatorName.equals("Number1"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(1, 2);
+		assertTrue(elevatorName.equals("Number1"));
 	}
 
 	@Test
@@ -98,16 +72,10 @@ public class StaticControllerTest {
 		elevatorList.add(e1);
 		elevatorList.add(e2);
 		elevatorList.add(e3);
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(1, 2);
-			System.out.println(elevatorName);
-			assertTrue(elevatorName.equals("Number1"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(1, 2);
+		assertTrue(elevatorName.equals("Number1"));
 	}
 
 	@Test
@@ -120,16 +88,10 @@ public class StaticControllerTest {
 		elevatorList.add(e1);
 		elevatorList.add(e2);
 		elevatorList.add(e3);
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(9, 10);
-			System.out.println(elevatorName);
-			assertTrue(elevatorName.equals("Number2"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(9, 10);
+		assertTrue(elevatorName.equals("Number2"));
 	}
 
 	@Test
@@ -142,16 +104,10 @@ public class StaticControllerTest {
 		elevatorList.add(e1);
 		elevatorList.add(e2);
 		elevatorList.add(e3);
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(7, 8);
-			System.out.println(elevatorName);
-			assertTrue(elevatorName.equals("Number2"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(7, 8);
+		assertTrue(elevatorName.equals("Number2"));
 	}
 
 	@Test
@@ -164,16 +120,10 @@ public class StaticControllerTest {
 		elevatorList.add(e1);
 		elevatorList.add(e2);
 		elevatorList.add(e3);
-		try {
-			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(7, 6);
-			System.out.println(elevatorName);
-			assertTrue(elevatorName.equals("Number3"));
-		} catch(ElevatorException e) {
-			assertTrue(false);
-		} catch(InvalidFloorRequest e) {
-			assertTrue(false);
-		}
+
+		Controller c = new Controller(elevatorList, 10);
+		String elevatorName = c.request(7, 6);
+		assertTrue(elevatorName.equals("Number3"));
 	}
 
 	@Test
@@ -188,8 +138,7 @@ public class StaticControllerTest {
 		elevatorList.add(e3);
 		try {
 			Controller c = new Controller(elevatorList, 10);
-			String elevatorName = c.request(7, 6);
-			System.out.println(elevatorName);
+			c.request(7, 6);
 			assertTrue(false);	// Shouldn't get here
 		} catch(ElevatorException e) {
 			assertTrue(true);
