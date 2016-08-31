@@ -130,6 +130,7 @@ public class Elevator {
 						// Determine if we are going up or down
 						state = gotoFloor > onFloorNumber ? ElevatorState.TRAVELING_UP : ElevatorState.TRAVELING_DOWN;
 
+						System.out.println(name + " - traveling to floor #" + gotoFloor);
 						// Simulate the travel time
 						try {
 							Thread.sleep(floorTravelTime);
@@ -150,12 +151,13 @@ public class Elevator {
 						}
 
 						// Ready for the next request now
+					} else {
+						System.out.println(name + " is waiting on floor#" + getCurrentFloor());
 					}
 				}
 
 				// Give some time before looking again
 				try {
-					System.out.println(name + " is waiting for a request...");
 					Thread.sleep(1000);
 				} catch(InterruptedException e) {}
 			}

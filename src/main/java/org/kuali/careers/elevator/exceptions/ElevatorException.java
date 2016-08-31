@@ -3,7 +3,7 @@ package org.kuali.careers.elevator.exceptions;
 /**
  * Created by gurneyds on 8/29/16.
  */
-public class ElevatorException extends Exception {
+public class ElevatorException extends RuntimeException {
 	String message;
 	public ElevatorException() {}
 

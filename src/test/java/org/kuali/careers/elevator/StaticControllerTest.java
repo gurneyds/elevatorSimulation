@@ -89,7 +89,7 @@ public class StaticControllerTest {
 	}
 
 	@Test
-	public void allMovingNeedToWaitAndFindClosestTest() {
+	public void allMovingUpNeedToWaitAndFindClosestTest() {
 		List<Elevator> elevatorList = new ArrayList<>();
 		Elevator e1 = new Elevator("Number1");	e1.setCurrentFloor(2); e1.setElevatorState(ElevatorState.TRAVELING_UP);
 		Elevator e2 = new Elevator("Number2");	e2.setCurrentFloor(3); e2.setElevatorState(ElevatorState.TRAVELING_UP);
@@ -103,6 +103,28 @@ public class StaticControllerTest {
 			String elevatorName = c.request(1, 2);
 			System.out.println(elevatorName);
 			assertTrue(elevatorName.equals("Number1"));
+		} catch(ElevatorException e) {
+			assertTrue(false);
+		} catch(InvalidFloorRequest e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void allMovingDownNeedToWaitAndFindClosestTest() {
+		List<Elevator> elevatorList = new ArrayList<>();
+		Elevator e1 = new Elevator("Number1");	e1.setCurrentFloor(6); e1.setElevatorState(ElevatorState.TRAVELING_DOWN);
+		Elevator e2 = new Elevator("Number2");	e2.setCurrentFloor(8); e2.setElevatorState(ElevatorState.TRAVELING_DOWN);
+		Elevator e3 = new Elevator("Number3");	e3.setCurrentFloor(4); e3.setElevatorState(ElevatorState.TRAVELING_DOWN);
+
+		elevatorList.add(e1);
+		elevatorList.add(e2);
+		elevatorList.add(e3);
+		try {
+			Controller c = new Controller(elevatorList, 10);
+			String elevatorName = c.request(9, 10);
+			System.out.println(elevatorName);
+			assertTrue(elevatorName.equals("Number2"));
 		} catch(ElevatorException e) {
 			assertTrue(false);
 		} catch(InvalidFloorRequest e) {
